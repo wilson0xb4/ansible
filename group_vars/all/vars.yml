@@ -4,6 +4,7 @@ instance_type: t2.micro
 ami_id: ami-5189a661
 region: us-west-2
 security_group: ssh-access
+tag_Name: sfb
 
 security_groups:
   - name: lamp_django
