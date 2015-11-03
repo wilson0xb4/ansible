@@ -10,8 +10,8 @@ chdir {{ django_home }}
 env DATABASE_URL="{{ db_url }}"
 env SECRET_KEY="{{ secret_key }}"
 env ALLOWED_HOSTS="{{ ec2_public_dns_name }}"
-env AWS_ACCESS_KEY_ID="{{ aws_access_key_id }}"
-env AWS_SECRET_ACCESS_KEY="{{ aws_secret_access_key }}"
+env AWS_ACCESS_KEY_ID="{{ aws_sqs_access_key_id }}"
+env AWS_SECRET_ACCESS_KEY="{{ aws_sqs_secret_access_key }}"
 env STRAVA_CLIENT_ID="{{ strava_client_id }}"
 env STRAVA_CLIENT_SECRET="{{ strava_client_secret }}"
 
