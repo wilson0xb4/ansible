@@ -1,0 +1,30 @@
+---
+ssh_key: pk-aws
+instance_type: t2.micro
+ami_id: ami-5189a661
+region: us-west-2
+security_group: ssh-access
+
+security_groups:
+  - name: lamp_django
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+    rules_egress: []
+  - name: lamp_mysql
+    rules:
+      - proto: tcp
+        from_port: 3306
+        to_port: 3306
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+    rules_egress: []

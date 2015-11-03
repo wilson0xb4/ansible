@@ -1,3 +1,9 @@
+# ssh keys
+sfb_deploy*
+
+# vault / secret variables
+vault.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

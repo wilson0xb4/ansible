@@ -1,0 +1,44 @@
+---
+- name: Install System Packages
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  sudo: yes
+  with_items:
+    - build-essential
+    - python-dev
+    - python-mysqldb
+    - python-pip
+    - git
+
+- name: copy GitHub deploy keys
+  copy: src=files/sfb_deploy dest=~/.ssh/ mode=600
+
+- name: Get Django Repository
+  git: repo=git@github.com:wilson0xb4/strava-friend-breaker.git
+       accept_hostkey=yes
+       dest={{ home }}
+       force=yes
+       key_file=~/.ssh/sfb_deploy
+
+- name: Install Python Dependencies
+  sudo: yes
+  pip:
+    state: present
+    requirements: "{{ home }}/requirements.txt"
+
+- name: Run Migrations
+  environment:
+    SECRET_KEY: "{{ secret_key }}"
+    DATABASE_URL: "{{ db_url }}"
+  django_manage:
+    app_path: "{{ django_home }}"
+    settings: friend_breaker.settings
+    command: migrate
+
+- name: Collect Static Files
+  environment:
+    SECRET_KEY: "{{ secret_key }}"
+    DATABASE_URL: "{{ db_url }}"
+  django_manage:
+    app_path: "{{ django_home }}"
+    settings: friend_breaker.settings
+    command: collectstatic
