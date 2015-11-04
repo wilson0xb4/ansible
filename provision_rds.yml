@@ -1,0 +1,35 @@
+---
+- name: Provision RDS Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: Provision MySQL Database
+      rds:
+        command: create
+        instance_name: "{{ db_instance_name }}"
+        db_engine: MySQL
+        size: 5
+        instance_type: "{{ db_instance_type }}"
+        region: "{{ region }}"
+        wait: yes
+        wait_timeout: 600
+        db_name: "{{ db_name }}"
+        username: "{{ db_username }}"
+        password: "{{ db_password }}"
+        tags:
+          Name: "{{ tag_Name }}"
+      register: rds
+
+    - name: Checking RDS endpoint status
+      debug: msg="Endpoint:{{ rds.instance.endpoint }}"
+
+    - name: save db endpoint and port info
+      set_fact:
+        db_endpoint: "{{ rds.instance.endpoint }}"
+        db_port: "{{ rds.instance.port }}"
+        db_url: "mysql://{{ rds.instance.username }}:{{ db_password }}@{{ rds.instance.endpoint }}:{{ rds.instance.port }}/{{ db_name }}"
+
+    #TODO - name: Provision Read Replica
