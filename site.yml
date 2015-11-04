@@ -1,3 +1,5 @@
 ---
+- include: common_setup.yml
+- include: provision_rds.yml
 - include: provision_ec2.yml
 - include: deploy_django.yml
