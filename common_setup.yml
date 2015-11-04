@@ -2,27 +2,32 @@
 - name: Configure Common Tasks
   hosts: localhost
   connection: local
-  gather_facts: False
+  gather_facts: no
 
   tasks:
     - name: Configure Security Groups
+      # these are wide open at the moment,
+      # I was trying to sort something out with celery/sqs
       ec2_group:
         name: "{{ item.name }}"
-        description: Security group for LAMP stack demo.
+        description: Security group for SFB demo.
         region: "{{ region }}"
         state: present
         rules: "{{ item.rules }}"
         rules_egress: "{{ item.rules_egress }}"
       with_items: security_groups
 
-    - name: make vpc
-      ec2_vpc:
-        state: present
-        cidr_block: 172.23.0.0/16
-        resource_tags: { "Environment":"Development" }
-        region: us-west-2
-      register: vpc
+    #
+    # attempting to make RDS provisioning set security groups
+    #
+    # - name: make vpc
+    #   ec2_vpc:
+    #     state: present
+    #     cidr_block: 172.23.0.0/16
+    #     resource_tags: { "Environment":"Development" }
+    #     region: us-west-2
+    #   register: vpc
 
-    - name: inspect vpc
-      debug: msg="{{ vpc }}"
+    # - name: inspect vpc
+    #   debug: msg="{{ vpc }}"
 

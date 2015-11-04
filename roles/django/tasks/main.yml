@@ -1,5 +1,5 @@
 ---
-- name: Get elb dns
+- name: Get ELB DNS
   set_fact:
     elb_dns_name: "{{ hostvars.localhost.elb.elb.dns_name }}"
   when: elb_dns_name is not defined

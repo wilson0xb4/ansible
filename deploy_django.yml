@@ -23,7 +23,3 @@
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             }
           - location /static/ { root {{ django_home }}; }
-
-  tasks:
-    - name: Django App Deployed!
-      debug: msg="Django app deployed at {{ elb_dns_name }}"

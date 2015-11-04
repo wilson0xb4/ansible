@@ -14,9 +14,6 @@
         name: "sfb-ami-{{ ansible_date_time.epoch }}"
         description: "AMI created {{ ansible_date_time.iso8601 }}"
         wait: yes
-        # unfortunately needs ansible 2.0
-        # tags:
-        #   Name: sfb-demo-instances
       register: ami
 
     - debug: msg="{{ ami }}"
@@ -55,6 +52,7 @@
         max_size: 5
         desired_capacity: 2
         region: "{{ region }}"
-      register: asg
 
+    - name: Site viewable at...
+      debug: msg="{{ elb_dns_name }}"
 

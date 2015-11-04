@@ -6,6 +6,11 @@
 
   tasks:
 
+    #
+    # couldn't get the security groups sorted out, so RDS is not provisioned
+    # it connects to a DB that already exists.
+    #
+
     - name: Provision MySQL Database
       rds:
         command: create
@@ -24,13 +29,10 @@
           Name: "{{ tag_Name }}"
       register: rds
 
-    - name: Checking RDS endpoint status
-      debug: msg="Endpoint:{{ rds.instance.endpoint }}"
-
     - name: save db endpoint and port info
       set_fact:
         db_endpoint: "{{ rds.instance.endpoint }}"
         db_port: "{{ rds.instance.port }}"
         db_url: "mysql://{{ rds.instance.username }}:{{ db_password }}@{{ rds.instance.endpoint }}:{{ rds.instance.port }}/{{ db_name }}"
 
-    #TODO - name: Provision Read Replica
+    #- name: Provision Read Replica

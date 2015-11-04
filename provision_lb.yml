@@ -28,6 +28,6 @@
           healthy_threshold: 2
       register: elb
 
-    - name: asdf
+    - name: Make the ELB DNS Name Known!
       set_fact:
         elb_dns_name: "{{ elb.elb.dns_name }}"

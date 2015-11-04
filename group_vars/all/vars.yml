@@ -1,5 +1,6 @@
 ---
 ssh_key: pk-aws
+
 instance_type: t2.micro
 db_instance_type: db.t2.micro
 db_instance_name: sfb-demo
@@ -12,38 +13,20 @@ zones:
   - us-west-2b
   - us-west-2c
 
-security_group: ssh-access
-db_security_group: ssh-access
+security_group: sfb-demo-sg
+db_security_group: sfb-demo-sg
 
 security_groups:
-  - name: lamp_django
+  - name: sfb-demo-sg
     rules:
-      - proto: tcp
-        from_port: 80
-        to_port: 80
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 22
-        to_port: 22
+      - proto: all
+        from_port: 0
+        to_port: 65535
         cidr_ip: 0.0.0.0/0
     rules_egress:
       - proto: all
         from_port: 0
         to_port: 65535
         cidr_ip: 0.0.0.0/0
-  - name: lamp_mysql
-    rules:
-      - proto: tcp
-        from_port: 3306
-        to_port: 3306
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 22
-        to_port: 22
-        cidr_ip: 0.0.0.0/0
-    rules_egress:
-      - proto: all
-        from_port: 0
-        to_port: 65535
-        cidr_ip: 0.0.0.0/0
+
 
