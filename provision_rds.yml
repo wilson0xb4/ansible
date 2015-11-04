@@ -14,6 +14,7 @@
         size: 5
         instance_type: "{{ db_instance_type }}"
         region: "{{ region }}"
+        security_group: "{{ db_security_group }}"
         wait: yes
         wait_timeout: 600
         db_name: "{{ db_name }}"
