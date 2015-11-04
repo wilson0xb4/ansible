@@ -12,6 +12,7 @@
 - put `vault.yml` in `group_vars/all/` directory (contains random api keys)
 
 - `ansible-playbook -i inventory/ site.yml` will:
+    - create a security group   
     - setup a loadbalancer
     - provision an EC2 instance
     - deploy django, gunicorn, celery, nginx
