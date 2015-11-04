@@ -8,8 +8,8 @@
     - `export AWS_ACCESS_KEY_ID=""`
     - `export AWS_SECRET_ACCESS_KEY=""`
     - set `ssh-key` in `group_vars/all/vars.yml` to the name of a ssh-key connected with your AWS account
-- put `sfb_deploy` in `files/` directory (ssh key only used for github deployment)
-- put `vault` in `group_vars/all/` directory (random api keys)
+- put `sfb_deploy` in `files/` directory (its an ssh key only used for github deployment)
+- put `vault.yml` in `group_vars/all/` directory (contains random api keys)
 
 - `ansible-playbook -i inventory/ site.yml` will:
     - setup a loadbalancer
