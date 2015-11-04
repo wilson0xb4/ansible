@@ -7,6 +7,11 @@ ami_id: ami-5189a661
 region: us-west-2
 tag_Name: sfb-demo
 
+zones:
+  - us-west-2a
+  - us-west-2b
+  - us-west-2c
+
 security_group: ssh-access
 db_security_group: ssh-access
 

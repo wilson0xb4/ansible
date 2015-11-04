@@ -1,0 +1,60 @@
+---
+- name: Setup Auto-Scaling
+  hosts: tag_Name_sfb-demo
+  remote_user: ubuntu
+  gather_facts: yes
+
+  tasks:
+
+    - name: Create AMI
+      local_action:
+        module: ec2_ami
+        region: "{{ region }}"
+        instance_id: "{{ ec2_id }}"
+        name: "sfb-ami-{{ ansible_date_time.epoch }}"
+        description: "AMI created {{ ansible_date_time.iso8601 }}"
+        wait: yes
+        # unfortunately needs ansible 2.0
+        # tags:
+        #   Name: sfb-demo-instances
+      register: ami
+
+    - debug: msg="{{ ami }}"
+
+    - name: Terminate EC2 instance used to make AMI
+      local_action:
+        module: ec2
+        state: absent
+        region: "{{ region }}"
+        instance_ids: "{{ ec2_id }}"
+
+    - name: Create Launch Configuration
+      local_action:
+        module: ec2_lc
+        region: "{{ region }}"
+        name: "sfb-lc-{{ ansible_date_time.epoch }}"
+        image_id: "{{ ami.image_id }}"
+        key_name: "{{ ssh_key }}"
+        instance_type: "{{ instance_type }}"
+        security_groups: "{{ security_group }}"
+        instance_monitoring: yes
+        #spot_price:
+      register: lc
+
+    - name: Create Auto-Scaling Group
+      local_action:
+        module: ec2_asg
+        name: sfb-asg
+        launch_config_name: "{{ lc.name }}"
+        load_balancers: "{{ elb_dns_name }}"
+        # health_check_period: 60
+        # health_check_type: ELB
+        replace_all_instances: yes
+        replace_batch_size: 1
+        min_size: 1
+        max_size: 5
+        desired_capacity: 2
+        region: "{{ region }}"
+      register: asg
+
+
