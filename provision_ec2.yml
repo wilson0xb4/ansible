@@ -6,16 +6,6 @@
 
   tasks:
 
-    # - name: Configure EC2 Security Groups
-    #   ec2_group:
-    #     name: "{{ item.name }}"
-    #     description: Security group for LAMP stack demo.
-    #     region: "{{ region }}"
-    #     state: present
-    #     rules: "{{ item.rules }}"
-    #     rules_egress: "{{ item.rules_egress }}"
-    #   with_items: security_groups
-
     - name: Provision EC2 Instances
       ec2:
         key_name: "{{ ssh_key }}"
@@ -32,7 +22,7 @@
       register: ec2
 
     - name: Add new instance to host group
-      add_host: hostname={{ item.public_ip }} groupname=tag_Name_sfb ec2_public_dns_name={{ item.public_dns_name }}
+      add_host: hostname={{ item.public_ip }} groupname=tag_Name_sfb-demo ec2_public_dns_name={{ item.public_dns_name }}
       with_items: ec2.instances
 
     - name: Wait for SSH to come up

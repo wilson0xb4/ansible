@@ -1,0 +1,16 @@
+---
+- name: Configure Common Tasks
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: Configure Security Groups
+      ec2_group:
+        name: "{{ item.name }}"
+        description: Security group for LAMP stack demo.
+        region: "{{ region }}"
+        state: present
+        rules: "{{ item.rules }}"
+        rules_egress: "{{ item.rules_egress }}"
+      with_items: security_groups
