@@ -51,7 +51,7 @@
         desired_capacity: 2
         region: "{{ region }}"
         wait_for_instances: no
-        wait_timeout: 500
+        wait_timeout: 1000
       register: asg
 
     - name: scaledown-policy
