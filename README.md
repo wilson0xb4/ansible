@@ -1,4 +1,4 @@
-# Ansible Deployment for Strava Friend Breaker
+# Ansible Deployment for SFB
 
 ### Assumptions
 - `sudo pip install ansible boto six`

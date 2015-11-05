@@ -1,7 +1,7 @@
 ---
 ssh_key: pk-aws
 
-instance_type: t2.micro
+instance_type: m4.large
 db_instance_type: db.t2.micro
 db_instance_name: sfb-demo
 ami_id: ami-5189a661
