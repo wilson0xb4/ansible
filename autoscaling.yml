@@ -16,8 +16,6 @@
         wait: yes
       register: ami
 
-    - debug: msg="{{ ami }}"
-
     - name: Terminate EC2 instance used to make AMI
       local_action:
         module: ec2
@@ -35,7 +33,7 @@
         instance_type: "{{ instance_type }}"
         security_groups: "{{ security_group }}"
         instance_monitoring: yes
-        #spot_price:
+        spot_price: 0.03
       register: lc
 
     - name: Create Auto-Scaling Group
@@ -44,14 +42,79 @@
         name: sfb-asg
         launch_config_name: "{{ lc.name }}"
         load_balancers: "{{ elb_dns_name }}"
-        # health_check_period: 60
-        # health_check_type: ELB
+        health_check_period: 60
+        health_check_type: ELB
         replace_all_instances: yes
         replace_batch_size: 1
         min_size: 1
         max_size: 5
         desired_capacity: 2
         region: "{{ region }}"
+        wait_for_instances: no
+        wait_timeout: 1000
+      register: asg
+
+    - name: scaledown-policy
+      local_action:
+        module: ec2_scaling_policy
+        state: present
+        region: "{{ region }}"
+        name: "sfb-scaledown-policy"
+        adjustment_type: "ChangeInCapacity"
+        asg_name: "{{ asg.name }}"
+        scaling_adjustment: -1
+        min_adjustment_step: 1
+        cooldown: 300
+      register: sdp
+
+    - name: scaleup-policy
+      local_action:
+        module: ec2_scaling_policy
+        state: present
+        region: "{{ region }}"
+        name: "sfb-scaleup-policy"
+        adjustment_type: "ChangeInCapacity"
+        asg_name: "{{ asg.name }}"
+        scaling_adjustment: +1
+        min_adjustment_step: 1
+        cooldown: 300
+      register: sup
+
+    - name: Create Alarm to ScaleDown
+      local_action:
+        module: ec2_metric_alarm
+        state: present
+        region: "{{ region }}"
+        name: "sfb-cpu-low"
+        metric: "CPUUtilization"
+        namespace: "AWS/EC2"
+        statistic: Average
+        comparison: "<="
+        threshold: 30.0
+        period: 300
+        evaluation_periods: 3
+        unit: "Percent"
+        description: "This will alarm when cpu usage average is lower than 30% for 15 minutes "
+        dimensions: AutoScalingGroupName={{ asg.name }}
+        alarm_actions: "{{ sdp.arn }}"
+
+    - name: Create Alarm to ScaleUp
+      local_action:
+        module: ec2_metric_alarm
+        state: present
+        region: "{{ region }}"
+        name: "sfb-cpu-high"
+        metric: "CPUUtilization"
+        namespace: "AWS/EC2"
+        statistic: Average
+        comparison: ">="
+        threshold: 60.0
+        period: 300
+        evaluation_periods: 3
+        unit: "Percent"
+        description: "This will alarm when cpu usage average is greater than 60% for 15 minutes "
+        dimensions: AutoScalingGroupName={{ asg.name }}
+        alarm_actions: "{{ sup.arn }}"
 
     - name: Site viewable at...
       debug: msg="{{ elb_dns_name }}"

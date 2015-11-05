@@ -16,18 +16,3 @@
         rules: "{{ item.rules }}"
         rules_egress: "{{ item.rules_egress }}"
       with_items: security_groups
-
-    #
-    # attempting to make RDS provisioning set security groups
-    #
-    # - name: make vpc
-    #   ec2_vpc:
-    #     state: present
-    #     cidr_block: 172.23.0.0/16
-    #     resource_tags: { "Environment":"Development" }
-    #     region: us-west-2
-    #   register: vpc
-
-    # - name: inspect vpc
-    #   debug: msg="{{ vpc }}"
-

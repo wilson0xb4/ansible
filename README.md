@@ -1,4 +1,4 @@
-# Ansible Deployment for Strava Friend Breaker
+# Ansible Deployment for SFB
 
 ### Assumptions
 - `sudo pip install ansible boto six`
@@ -35,7 +35,9 @@ From their website:
 ### Bonus 3: Scalability
 I went with an immutable infrastructure design. There is a load balancer that is the entry point to the site, all instances are deployed under it. When a new deployment happens, we provision a temporary ec2 instance, deploy and configure the app, create an AMI, and destroy the temporary instance. Then the auto-scaling policy starts provisioning new instances from the AMI we created under the load balancer, while also removing the old instances from it. It does this at a specified rate, I have it set to remove one at a time.
 
-Currently the only metric its basing this off of is that `x` instances are 'healthy'. If I can get my celery/sqs system back up, I want to make the metric based on that. Looking at how full the queues get maybe.
+Originally, the only metric its basing this off of is that `x` instances are 'healthy'. If I can get my celery/sqs system back up, I want to make the metric based on that. Looking at how full the queues get maybe.
+
+Now, Its looking at CPU usage. If usage averages below 30%, it kills an instance. If usage averages above 60% for 15 minutes, it adds a new instance.
 
 ### Other Notes...
-I created an IAM user for SQS and used those credentials on the deployments. This shouldn't matter currently as I think the load balancer setup broke the celery/sqs interaction.
+I created an IAM user for SQS and used those credentials on the deployments. This doesn't impact the deployment script, but makes my app not all that useful...
