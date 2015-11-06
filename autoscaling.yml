@@ -33,7 +33,7 @@
         instance_type: "{{ instance_type }}"
         security_groups: "{{ security_group }}"
         instance_monitoring: yes
-        spot_price: 0.03
+        #spot_price: 0.03
       register: lc
 
     - name: Create Auto-Scaling Group
