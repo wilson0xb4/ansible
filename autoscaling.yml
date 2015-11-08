@@ -23,6 +23,22 @@
         region: "{{ region }}"
         instance_ids: "{{ ec2_id }}"
 
+    #
+    # possibly throw the instance into load balancer instead of terminating it
+    #
+    # - name: Get ELB Name
+    #   set_fact:
+    #     elb_name: "{{ hostvars.localhost.elb.elb.name }}"
+    #   when: elb_name is not defined
+
+    # - name: Instance Register
+    #   local_action:
+    #     module: ec2_elb
+    #     region: "{{ region }}"
+    #     instance_id: "{{ ec2_id }}"
+    #     ec2_elbs: "{{ elb_name }}"
+    #     state: present
+
     - name: Create Launch Configuration
       local_action:
         module: ec2_lc
