@@ -24,7 +24,7 @@
     - name: Add new instance to host group
       add_host:
         hostname: "{{ item.public_ip }}"
-        groupname: tag_Name_sfb-demo
+        groupname: tag_Name_sfb-temp
         ec2_id: "{{ item.id }}"
       with_items: ec2.instances
 

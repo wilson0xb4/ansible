@@ -3,21 +3,21 @@ ssh_key: pk-aws
 
 instance_type: t2.micro
 db_instance_type: db.t2.micro
-db_instance_name: sfb-demo
+
 ami_id: ami-5189a661
 region: us-west-2
-tag_Name: sfb-demo
+tag_Name: sfb-temp
 
 zones:
   - us-west-2a
   - us-west-2b
   - us-west-2c
 
-security_group: sfb-demo-sg
-db_security_group: sfb-demo-sg
+security_group: sfb-sg
+db_security_group: sfb-sg
 
 security_groups:
-  - name: sfb-demo-sg
+  - name: sfb-sg
     rules:
       - proto: all
         from_port: 0
