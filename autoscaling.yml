@@ -1,6 +1,14 @@
 ---
+
+# autoscaling.yml assumes we have an instance provisioned, with tag
+# Name=sfb-temp and our app deployed to it.
+
+# TODO: figure out how to find the elb name without needing to set up
+#       the elb in the same run.
+
+
 - name: Setup Auto-Scaling
-  hosts: tag_Name_sfb-demo
+  hosts: tag_Name_sfb-temp
   remote_user: ubuntu
   gather_facts: yes
 
@@ -42,7 +50,7 @@
     - name: Create Launch Configuration
       local_action:
         module: ec2_lc
-        assign_public_ip: no
+        # assign_public_ip: no # need to deal with subnets before I can turn off public IPs
         region: "{{ region }}"
         name: "sfb-lc-{{ ansible_date_time.epoch }}"
         image_id: "{{ ami.image_id }}"
@@ -67,7 +75,7 @@
         max_size: 5
         desired_capacity: 2
         region: "{{ region }}"
-        wait_for_instances: no
+        wait_for_instances: yes
         wait_timeout: 1000
       register: asg
 
