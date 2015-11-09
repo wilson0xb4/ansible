@@ -42,6 +42,7 @@
     - name: Create Launch Configuration
       local_action:
         module: ec2_lc
+        assign_public_ip: no
         region: "{{ region }}"
         name: "sfb-lc-{{ ansible_date_time.epoch }}"
         image_id: "{{ ami.image_id }}"
